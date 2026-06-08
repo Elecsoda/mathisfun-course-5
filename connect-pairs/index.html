@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="用自由画线连接相同字母，并实时判断连线是否交叉、越界或穿过方块"
+    />
+    <title>字母配对连线挑战</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="hero">
+        <p class="eyebrow">平面连线实验</p>
+        <h1>字母配对连线挑战</h1>
+        <p class="intro">
+          从一个字母方块出发，用自由画笔连接到相同字母。试试看，能否让三条线互不相交？
+        </p>
+      </header>
+
+      <section class="tool-card" aria-labelledby="board-title">
+        <div class="toolbar">
+          <div>
+            <p class="section-kicker">自由画笔</p>
+            <h2 id="board-title">连接 A、B、C</h2>
+          </div>
+
+          <div class="actions">
+            <button id="teacherModeButton" class="teacher-button" type="button">
+              教师演示模式
+            </button>
+            <button id="undoButton" class="secondary-button" type="button" disabled>
+              撤销上一条
+            </button>
+            <button id="resetButton" class="primary-button" type="button">
+              重新开始
+            </button>
+          </div>
+        </div>
+
+        <div class="rules">
+          <span><i class="rule-dot same"></i>起点、终点必须是同一字母</span>
+          <span><i class="rule-dot clear"></i>连线不能相交，也不能穿过方块</span>
+          <span><i class="rule-dot inside"></i>所有连线必须留在外框内</span>
+        </div>
+
+        <div class="status-row" aria-live="polite">
+          <div class="progress">
+            <strong id="progressCount">0 / 3</strong>
+            <span>已完成配对</span>
+          </div>
+          <span id="teacherBadge" class="teacher-badge" hidden>教师演示中</span>
+          <p id="statusMessage" class="status-message">
+            请从任意字母方块内按住并拖动。
+          </p>
+        </div>
+
+        <div class="board-wrap">
+          <svg
+            id="drawingBoard"
+            class="drawing-board"
+            viewBox="0 0 800 620"
+            role="application"
+            aria-label="字母配对自由连线画板"
+          >
+            <rect class="board-background" x="20" y="20" width="760" height="580" rx="24" />
+            <rect class="frame" x="90" y="70" width="620" height="480" rx="4" />
+
+            <g id="completedLines" class="completed-lines"></g>
+            <g id="previewLayer" class="preview-layer"></g>
+
+            <g class="blocks" aria-hidden="true">
+              <g class="letter-block" data-id="A-top" data-letter="A">
+                <rect x="175" y="155" width="72" height="72" rx="7" />
+                <text x="211" y="191">A</text>
+              </g>
+              <g class="letter-block edge-top" data-id="B-top" data-letter="B">
+                <rect x="364" y="70" width="72" height="72" rx="0" />
+                <text x="400" y="106">B</text>
+              </g>
+              <g class="letter-block" data-id="C-top" data-letter="C">
+                <rect x="553" y="155" width="72" height="72" rx="7" />
+                <text x="589" y="191">C</text>
+              </g>
+              <g class="letter-block edge-bottom" data-id="C-bottom" data-letter="C">
+                <rect x="175" y="478" width="72" height="72" rx="0" />
+                <text x="211" y="514">C</text>
+              </g>
+              <g class="letter-block edge-bottom" data-id="B-bottom" data-letter="B">
+                <rect x="364" y="478" width="72" height="72" rx="0" />
+                <text x="400" y="514">B</text>
+              </g>
+              <g class="letter-block edge-bottom" data-id="A-bottom" data-letter="A">
+                <rect x="553" y="478" width="72" height="72" rx="0" />
+                <text x="589" y="514">A</text>
+              </g>
+            </g>
+          </svg>
+        </div>
+
+        <div class="legend" aria-label="连线状态图例">
+          <span><i class="line-sample valid"></i>有效连线</span>
+          <span><i class="line-sample drawing"></i>正在绘制</span>
+          <span><i class="line-sample invalid"></i>发生冲突</span>
+        </div>
+
+        <div id="successPanel" class="success-panel" hidden>
+          <strong>挑战成功！</strong>
+          <span>三组字母都已连接，并且连线互不相交。</span>
+        </div>
+      </section>
+
+      <dialog id="teacherDialog" class="teacher-dialog">
+        <form id="teacherForm" method="dialog">
+          <button
+            id="closeTeacherDialog"
+            class="dialog-close"
+            type="button"
+            aria-label="关闭"
+          >×</button>
+          <p class="section-kicker">教师功能</p>
+          <h2>开启演示模式</h2>
+          <p class="dialog-copy">
+            开启后可拖动字母方块，三条连线会自动避开方块和其他连线。
+          </p>
+          <label for="teacherPassword">请输入教师密码</label>
+          <input
+            id="teacherPassword"
+            type="password"
+            autocomplete="current-password"
+            placeholder="教师密码"
+          />
+          <p id="passwordError" class="password-error" role="alert" hidden>
+            密码不正确，请重新输入。
+          </p>
+          <button class="primary-button dialog-submit" type="submit">
+            开启演示模式
+          </button>
+        </form>
+      </dialog>
+
+      <footer>
+        <p>提示：有些方块紧贴边框，路线也许要绕到你一开始没想到的位置。</p>
+        <p class="site-credit">@孙维刚教育研究院 小宇老师</p>
+      </footer>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,582 @@
+:root {
+  --ink: #24324a;
+  --muted: #6f7b91;
+  --paper: rgba(255, 255, 255, 0.94);
+  --purple: #654df2;
+  --purple-dark: #4e38cc;
+  --purple-soft: #eeeaff;
+  --green: #149a61;
+  --green-soft: #dcf8e9;
+  --red: #df4b5f;
+  --red-soft: #ffebee;
+  --blue: #3485ed;
+  --line: #dce1eb;
+  --shadow: 0 20px 50px rgba(64, 50, 122, 0.14);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 10% 0%, rgba(71, 142, 255, 0.14), transparent 29rem),
+    radial-gradient(circle at 92% 20%, rgba(166, 84, 246, 0.12), transparent 28rem),
+    linear-gradient(145deg, #f3f7ff, #fbf7ff);
+  font-family:
+    "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, BlinkMacSystemFont,
+    sans-serif;
+}
+
+button {
+  font: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.page-shell {
+  width: min(1060px, calc(100% - 28px));
+  margin: 0 auto;
+  padding: 34px 0 24px;
+}
+
+.hero {
+  text-align: center;
+}
+
+.eyebrow,
+.section-kicker {
+  margin: 0 0 5px;
+  color: var(--purple);
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 10px;
+  color: var(--purple-dark);
+  font-size: clamp(1.8rem, 4vw, 2.75rem);
+  letter-spacing: -0.04em;
+}
+
+h2 {
+  margin-bottom: 0;
+  font-size: clamp(1.2rem, 2.5vw, 1.65rem);
+}
+
+.intro {
+  max-width: 720px;
+  margin: 0 auto 22px;
+  color: #58667c;
+  font-size: clamp(0.92rem, 1.8vw, 1.08rem);
+  line-height: 1.7;
+}
+
+.tool-card {
+  overflow: hidden;
+  border: 1px solid rgba(105, 88, 189, 0.13);
+  border-radius: 24px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+
+.toolbar {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 26px 16px;
+}
+
+.actions {
+  display: flex;
+  gap: 9px;
+}
+
+.primary-button,
+.secondary-button,
+.teacher-button {
+  min-height: 42px;
+  padding: 9px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 800;
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease,
+    opacity 150ms ease;
+}
+
+.primary-button {
+  border: 0;
+  color: #fff;
+  background: linear-gradient(135deg, #5869f4, var(--purple));
+  box-shadow: 0 8px 18px rgba(101, 77, 242, 0.24);
+}
+
+.secondary-button {
+  border: 2px solid #d8d2fb;
+  color: var(--purple-dark);
+  background: #fff;
+}
+
+.teacher-button {
+  border: 2px solid #f0c75e;
+  color: #7a5700;
+  background: #fff8dd;
+}
+
+.teacher-button.active {
+  border-color: #e3a900;
+  color: #fff;
+  background: #b98500;
+}
+
+.primary-button:hover,
+.secondary-button:hover:not(:disabled),
+.teacher-button:hover {
+  transform: translateY(-1px);
+}
+
+.secondary-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
+}
+
+.rules {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  padding: 11px 26px;
+  border-top: 1px solid #eceaf5;
+  border-bottom: 1px solid #eceaf5;
+  color: #5e687b;
+  background: #faf9ff;
+  font-size: 0.82rem;
+  font-weight: 700;
+  flex-wrap: wrap;
+}
+
+.rules span {
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
+}
+
+.rule-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.rule-dot.same {
+  background: var(--purple);
+}
+
+.rule-dot.clear {
+  background: var(--green);
+}
+
+.rule-dot.inside {
+  background: var(--blue);
+}
+
+.status-row {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  padding: 14px 26px 8px;
+}
+
+.progress {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  flex: 0 0 auto;
+}
+
+.progress strong {
+  color: var(--purple-dark);
+  font-size: 1.25rem;
+}
+
+.progress span {
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.teacher-badge {
+  flex: 0 0 auto;
+  padding: 5px 10px;
+  border-radius: 999px;
+  color: #745200;
+  background: #fff1b8;
+  font-size: 0.74rem;
+  font-weight: 900;
+}
+
+.status-message {
+  margin: 0;
+  color: #5c6980;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.status-message.error {
+  color: var(--red);
+}
+
+.status-message.success {
+  color: var(--green);
+}
+
+.board-wrap {
+  padding: 8px 22px 2px;
+}
+
+.drawing-board {
+  display: block;
+  width: 100%;
+  max-height: 650px;
+  border-radius: 20px;
+  touch-action: none;
+  user-select: none;
+  cursor: crosshair;
+}
+
+.board-background {
+  fill: #f8faff;
+  stroke: #e5e8f2;
+  stroke-width: 2;
+}
+
+.frame {
+  fill: #fff;
+  stroke: #29364b;
+  stroke-width: 5;
+}
+
+.letter-block rect {
+  fill: #fff;
+  stroke: #29364b;
+  stroke-width: 5;
+  transition:
+    fill 150ms ease,
+    stroke 150ms ease;
+}
+
+.letter-block text {
+  fill: #24324a;
+  font-size: 34px;
+  font-weight: 900;
+  text-anchor: middle;
+  dominant-baseline: central;
+  pointer-events: none;
+}
+
+.letter-block.available {
+  cursor: crosshair;
+}
+
+.drawing-board.teacher-mode {
+  cursor: default;
+}
+
+.drawing-board.teacher-mode .letter-block.teacher-draggable {
+  cursor: grab;
+}
+
+.drawing-board.teacher-mode .letter-block.teacher-draggable:hover rect {
+  filter: brightness(0.96);
+}
+
+.drawing-board.teacher-mode .letter-block.teacher-locked {
+  cursor: not-allowed;
+}
+
+.drawing-board.teacher-mode .letter-block.dragging {
+  cursor: grabbing;
+  filter: drop-shadow(0 8px 8px rgba(36, 50, 74, 0.2));
+}
+
+.letter-block.available:hover rect,
+.letter-block.starting rect {
+  fill: var(--letter-soft);
+  stroke: var(--letter-color);
+}
+
+.letter-block.connected rect {
+  fill: var(--letter-soft);
+  stroke: var(--letter-color);
+}
+
+.letter-block.conflict rect {
+  fill: var(--red-soft);
+  stroke: var(--red);
+}
+
+.completed-line,
+.preview-line {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.completed-line {
+  stroke: var(--letter-color);
+  stroke-width: 4;
+}
+
+.completed-line-hit {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 28;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: stroke;
+  cursor: pointer;
+}
+
+.line-group:hover .completed-line {
+  opacity: 0.76;
+}
+
+.preview-line {
+  stroke: var(--letter-color);
+  stroke-width: 4;
+  stroke-dasharray: 4 4;
+}
+
+.preview-line.invalid {
+  stroke: var(--red);
+}
+
+.preview-tip {
+  fill: var(--letter-color);
+  stroke: #fff;
+  stroke-width: 4;
+}
+
+.preview-tip.invalid {
+  fill: var(--red);
+}
+
+.legend {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  padding: 8px 20px 18px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  flex-wrap: wrap;
+}
+
+.legend span {
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
+}
+
+.line-sample {
+  width: 28px;
+  height: 0;
+  border-top: 4px solid;
+  border-radius: 5px;
+}
+
+.line-sample.valid {
+  border-color: var(--green);
+}
+
+.line-sample.drawing {
+  border-color: var(--purple);
+  border-top-style: dashed;
+}
+
+.line-sample.invalid {
+  border-color: var(--red);
+}
+
+.success-panel {
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 22px;
+  color: #087546;
+  background: var(--green-soft);
+  text-align: center;
+}
+
+.success-panel:not([hidden]) {
+  display: flex;
+}
+
+.success-panel strong {
+  font-size: 1.08rem;
+}
+
+.teacher-dialog {
+  width: min(430px, calc(100% - 28px));
+  padding: 0;
+  border: 0;
+  border-radius: 20px;
+  color: var(--ink);
+  background: #fff;
+  box-shadow: 0 24px 70px rgba(35, 31, 70, 0.28);
+}
+
+.teacher-dialog::backdrop {
+  background: rgba(31, 37, 57, 0.48);
+  backdrop-filter: blur(3px);
+}
+
+.teacher-dialog form {
+  position: relative;
+  display: grid;
+  gap: 12px;
+  padding: 28px;
+}
+
+.teacher-dialog h2,
+.teacher-dialog p {
+  margin-bottom: 0;
+}
+
+.dialog-copy {
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.65;
+}
+
+.teacher-dialog label {
+  margin-top: 5px;
+  color: #4d596d;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.teacher-dialog input {
+  width: 100%;
+  height: 44px;
+  padding: 0 13px;
+  border: 2px solid #dcdfea;
+  border-radius: 11px;
+  outline: 0;
+  color: var(--ink);
+  font: inherit;
+}
+
+.teacher-dialog input:focus {
+  border-color: var(--purple);
+  box-shadow: 0 0 0 4px rgba(101, 77, 242, 0.12);
+}
+
+.dialog-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: #788196;
+  background: #f2f3f7;
+  cursor: pointer;
+  font-size: 1.35rem;
+}
+
+.password-error {
+  color: var(--red);
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.dialog-submit {
+  margin-top: 3px;
+}
+
+footer {
+  padding-top: 18px;
+  color: #6d7789;
+  font-size: 0.86rem;
+  line-height: 1.65;
+  text-align: center;
+}
+
+footer p {
+  margin-bottom: 3px;
+}
+
+.site-credit {
+  color: #8c94a4;
+  font-size: 0.76rem;
+}
+
+@media (max-width: 700px) {
+  .page-shell {
+    width: min(100% - 18px, 1060px);
+    padding-top: 22px;
+  }
+
+  .toolbar,
+  .status-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .toolbar {
+    padding: 18px 18px 13px;
+  }
+
+  .actions {
+    width: 100%;
+  }
+
+  .actions button {
+    flex: 1;
+    padding-right: 10px;
+    padding-left: 10px;
+    font-size: 0.82rem;
+  }
+
+  .rules {
+    gap: 9px 14px;
+    padding: 10px 18px;
+  }
+
+  .status-row {
+    gap: 5px;
+    padding: 12px 18px 5px;
+  }
+
+  .board-wrap {
+    padding: 4px 6px 0;
+  }
+
+  .legend {
+    gap: 10px 16px;
+    padding-bottom: 14px;
+  }
+
+  .success-panel:not([hidden]) {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
