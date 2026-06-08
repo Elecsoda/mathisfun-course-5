@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="通过安排四周优秀士兵名单，探索守卫标兵人数的最小值与最大值"
+    />
+    <title>守卫标兵评选模拟</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="hero">
+        <div class="title-row">
+          <span class="shield" aria-hidden="true"></span>
+          <div>
+            <h1>守卫标兵评选模拟</h1>
+          </div>
+        </div>
+        <p class="intro">
+          共进行 <strong id="introWeekCount">4</strong> 周评比，每周选出
+          <strong id="introPickCount">5</strong> 位优秀士兵。获得
+          <strong>3 次或以上</strong>优秀的士兵，将获得“守卫标兵”称号。
+        </p>
+        <div class="question">
+          <span>想一想</span>
+          最少有多少人可以获得奖章？最多可以有多少人获得奖章？
+        </div>
+      </header>
+
+      <section class="toolbar" aria-label="游戏设置">
+        <div class="mode-group" role="group" aria-label="快捷设置">
+          <button class="mode-button active" type="button" data-count="9">
+            简化版 <small>9 人</small>
+          </button>
+          <button class="mode-button" type="button" data-count="28">
+            完整版 <small>28 人</small>
+          </button>
+        </div>
+
+        <form
+          class="custom-settings"
+          id="customSettings"
+          aria-label="自定义评选设置"
+        >
+          <div class="custom-setting">
+            <span>士兵人数</span>
+            <div class="number-stepper">
+              <button
+                type="button"
+                data-step-target="participantCountInput"
+                data-delta="-1"
+                aria-label="减少士兵人数"
+              >−</button>
+              <input
+                id="participantCountInput"
+                type="number"
+                min="1"
+                max="60"
+                value="9"
+                readonly
+              />
+              <button
+                type="button"
+                data-step-target="participantCountInput"
+                data-delta="1"
+                aria-label="增加士兵人数"
+              >+</button>
+            </div>
+          </div>
+          <div class="custom-setting">
+            <span>每周优秀</span>
+            <div class="number-stepper">
+              <button
+                type="button"
+                data-step-target="picksPerWeekInput"
+                data-delta="-1"
+                aria-label="减少每周优秀人数"
+              >−</button>
+              <input
+                id="picksPerWeekInput"
+                type="number"
+                min="1"
+                max="20"
+                value="5"
+                readonly
+              />
+              <button
+                type="button"
+                data-step-target="picksPerWeekInput"
+                data-delta="1"
+                aria-label="增加每周优秀人数"
+              >+</button>
+            </div>
+          </div>
+          <div class="custom-setting">
+            <span>周数</span>
+            <div class="number-stepper">
+              <button
+                type="button"
+                data-step-target="weekCountInput"
+                data-delta="-1"
+                aria-label="减少周数"
+              >−</button>
+              <input
+                id="weekCountInput"
+                type="number"
+                min="1"
+                max="12"
+                value="4"
+                readonly
+              />
+              <button
+                type="button"
+                data-step-target="weekCountInput"
+                data-delta="1"
+                aria-label="增加周数"
+              >+</button>
+            </div>
+          </div>
+          <button class="apply-button" type="submit">应用设置</button>
+        </form>
+
+        <div class="action-buttons">
+          <button id="undoButton" class="secondary-button" type="button" disabled>
+            撤销
+          </button>
+          <button id="resetButton" class="reset-button" type="button">
+            重新开始
+          </button>
+        </div>
+      </section>
+
+      <div class="workspace">
+        <aside class="soldier-panel" aria-labelledby="soldier-title">
+          <div class="panel-heading">
+            <div>
+              <p class="section-kicker">点击或拖拽</p>
+              <h2 id="soldier-title">士兵列表</h2>
+            </div>
+            <span id="soldierCount" class="count-pill">9 人</span>
+          </div>
+          <div
+            class="fill-options panel-fill-options"
+            role="radiogroup"
+            aria-labelledby="fill-direction-title"
+          >
+            <p id="fill-direction-title" class="fill-options-title">
+              自动填充方向
+            </p>
+            <label>
+              <input type="radio" name="fillOrder" value="row" checked />
+              <span>横向填充 <b aria-hidden="true">→</b></span>
+            </label>
+            <label>
+              <input type="radio" name="fillOrder" value="column" />
+              <span>竖向填充 <b aria-hidden="true">↓</b></span>
+            </label>
+          </div>
+          <div class="soldier-list" id="soldierList"></div>
+          <p class="panel-tip">
+            点击会自动填入下一个空位；也可以拖到指定周次。
+          </p>
+        </aside>
+
+        <section class="selection-panel" aria-labelledby="selection-title">
+          <div class="selection-title">
+            <span aria-hidden="true">🏆</span>
+            <h2 id="selection-title">每周优秀士兵</h2>
+          </div>
+
+          <div class="board-scroller">
+            <div class="selection-board" id="selectionBoard"></div>
+          </div>
+
+          <p class="board-help" id="boardHelp" aria-live="polite">
+            请选择一位士兵，或将士兵拖到虚线框中。
+          </p>
+        </section>
+      </div>
+
+      <section class="result-panel" aria-labelledby="result-title">
+        <div class="result-heading">
+          <div>
+            <p class="section-kicker green">实时统计</p>
+            <h2 id="result-title"><span aria-hidden="true">🏅</span> 守卫标兵榜</h2>
+          </div>
+          <div class="stats" aria-label="当前统计">
+            <div><strong id="assignedCount">0</strong><span>已分配席位</span></div>
+            <div class="green-stat">
+              <strong id="winnerCount">0</strong><span>守卫标兵</span>
+            </div>
+            <div class="purple-stat">
+              <strong id="totalSlotCount">20</strong><span>总席位数</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="result-content" id="resultContent" aria-live="polite"></div>
+        <p class="highlight-tip" id="highlightTip" hidden>
+          点击标兵卡片，可以高亮他在每周榜单中的位置。
+        </p>
+      </section>
+
+      <footer>
+        <p>试着用不同安排得到更多或更少的守卫标兵，并说明为什么不能再多或再少。</p>
+        <p class="site-credit">@孙维刚教育研究院 小宇老师</p>
+      </footer>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
