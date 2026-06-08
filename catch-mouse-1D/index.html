@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Tom 和 Jerry 在 30 个方格上的一维追逐互动模拟"
+    />
+    <title>Tom 追 Jerry - 一维追逐模拟</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">一维追逐实验</p>
+          <h1>Tom 能抓到 Jerry 吗？</h1>
+          <p class="intro">
+            Tom 从第 1 格出发，Jerry 从第 <strong id="introJerryStart">10</strong>
+            格出发。Tom 按 <strong id="introTomPattern">3、1、3、1……</strong>
+            的规律跳，Jerry 按
+            <strong id="introJerryPattern">1、1、1、1……</strong>
+            的规律跳。两者交替行动，Tom 先走。
+          </p>
+        </div>
+        <div class="rules" aria-label="游戏规则">
+          <div><span>🐱</span><b>Tom</b> <i id="tomRule">按 3、1 循环</i></div>
+          <div><span>🐭</span><b>Jerry</b> <i id="jerryRule">每次跳 1 格</i></div>
+          <div><span>🏁</span>40 步内追上，否则 Jerry 逃脱</div>
+        </div>
+      </header>
+
+      <section class="game-card" aria-labelledby="game-title">
+        <div class="game-toolbar">
+          <div>
+            <p class="section-kicker">互动模拟</p>
+            <h2 id="game-title">选择小动物上方的箭头</h2>
+          </div>
+        </div>
+
+        <form class="settings-panel" id="settingsForm">
+          <div class="game-actions">
+            <button class="reset-button" id="resetButton" type="button">
+              重新开始
+            </button>
+            <button class="undo-button" id="undoButton" type="button" disabled>
+              撤回上一步
+            </button>
+          </div>
+
+          <span class="custom-label">自定义</span>
+
+          <div class="setting-group" role="group" aria-label="方格数">
+            <span class="setting-title">方格数</span>
+            <div class="number-stepper">
+              <button type="button" data-step-target="cellCountInput" data-delta="-1" aria-label="减少方格数">−</button>
+              <input id="cellCountInput" type="number" min="5" max="40" value="30" readonly />
+              <button type="button" data-step-target="cellCountInput" data-delta="1" aria-label="增加方格数">+</button>
+            </div>
+          </div>
+
+          <div class="setting-group" role="group" aria-label="Tom 步长">
+            <span class="setting-title">Tom 步长</span>
+            <div class="pattern-steppers">
+              <div class="number-stepper">
+                <button type="button" data-step-target="tomStepA" data-delta="-1" aria-label="减少 Tom 第一个步长">−</button>
+                <input id="tomStepA" aria-label="Tom 第一个步长" type="number" min="1" max="40" value="3" readonly />
+                <button type="button" data-step-target="tomStepA" data-delta="1" aria-label="增加 Tom 第一个步长">+</button>
+              </div>
+              <span class="pattern-separator">、</span>
+              <div class="number-stepper">
+                <button type="button" data-step-target="tomStepB" data-delta="-1" aria-label="减少 Tom 第二个步长">−</button>
+                <input id="tomStepB" aria-label="Tom 第二个步长" type="number" min="1" max="40" value="1" data-optional="true" readonly />
+                <button type="button" data-step-target="tomStepB" data-delta="1" aria-label="增加 Tom 第二个步长">+</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="setting-group" role="group" aria-label="Jerry 步长">
+            <span class="setting-title">Jerry 步长</span>
+            <div class="pattern-steppers">
+              <div class="number-stepper">
+                <button type="button" data-step-target="jerryStepA" data-delta="-1" aria-label="减少 Jerry 第一个步长">−</button>
+                <input id="jerryStepA" aria-label="Jerry 第一个步长" type="number" min="1" max="40" value="1" readonly />
+                <button type="button" data-step-target="jerryStepA" data-delta="1" aria-label="增加 Jerry 第一个步长">+</button>
+              </div>
+              <span class="pattern-separator">、</span>
+              <div class="number-stepper">
+                <button type="button" data-step-target="jerryStepB" data-delta="-1" aria-label="减少 Jerry 第二个步长">−</button>
+                <input id="jerryStepB" aria-label="Jerry 第二个步长，可留空" type="number" min="1" max="40" data-optional="true" placeholder="空" readonly />
+                <button type="button" data-step-target="jerryStepB" data-delta="1" aria-label="增加 Jerry 第二个步长">+</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="setting-group target-setting">
+            <label class="toggle-setting">
+              <input id="showTargetsInput" type="checkbox" />
+              <span class="toggle-track" aria-hidden="true"></span>
+              <span>显示可去格子</span>
+            </label>
+          </div>
+        </form>
+
+        <div class="status-grid" aria-live="polite">
+          <div class="status-item active-status">
+            <span>当前行动</span>
+            <strong id="turnDisplay">Tom</strong>
+          </div>
+          <div class="status-item">
+            <span>当前步长</span>
+            <strong id="jumpDisplay">3 格</strong>
+          </div>
+          <div class="status-item">
+            <span>已走步数</span>
+            <strong><span id="stepDisplay">0</span> / 40</strong>
+          </div>
+          <div class="status-item">
+            <span>当前位置</span>
+            <strong id="positionDisplay">Tom 1 · Jerry 10</strong>
+          </div>
+        </div>
+
+        <div class="progress-track" aria-hidden="true">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <p class="action-notice" id="actionNotice" role="alert" hidden></p>
+
+        <div class="board-viewport" id="boardViewport">
+          <div class="board-stage">
+            <div class="controls-layer" id="controlsLayer"></div>
+            <div class="board" id="board" aria-label="30 格追逐棋盘"></div>
+          </div>
+        </div>
+
+        <div class="legend">
+          <span><i class="legend-dot tom-dot"></i>Tom</span>
+          <span><i class="legend-dot jerry-dot"></i>Jerry</span>
+          <span class="hint" id="hintText">轮到 Tom：请选择向左或向右跳 3 格</span>
+        </div>
+
+        <div class="message-panel" id="messagePanel" hidden>
+          <div class="message-icon" id="messageIcon">🎉</div>
+          <div>
+            <p class="message-title" id="messageTitle"></p>
+            <p class="message-copy" id="messageCopy"></p>
+          </div>
+          <button id="playAgainButton" type="button">再玩一次</button>
+        </div>
+
+        <ol class="history" id="historyList" aria-label="行动记录"></ol>
+      </section>
+
+      <p class="footer-note">
+        思考：双方都可以自己选择方向。尝试不同走法，看看 Tom 是否一定能抓住
+        Jerry。
+      </p>
+      <footer class="site-credit">@孙维刚教育研究院 小宇老师</footer>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
