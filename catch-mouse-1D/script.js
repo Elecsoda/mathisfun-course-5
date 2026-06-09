@@ -35,8 +35,7 @@ const orientationButtonText = document.querySelector(
 
 let state;
 let noticeTimer;
-let layoutPreference = null;
-let orientationFullscreen = false;
+let layoutPreference = "portrait";
 let settings = {
   cellCount: 30,
   tomPattern: [3, 1],
@@ -372,26 +371,12 @@ function render() {
 }
 
 function isLandscapeLayout() {
-  if (layoutPreference) {
-    return layoutPreference === "landscape";
-  }
-  return window.matchMedia("(orientation: landscape)").matches;
+  return layoutPreference === "landscape";
 }
 
 function syncLayoutClasses() {
-  const autoLandscape =
-    !layoutPreference &&
-    window.matchMedia(
-      "(orientation: landscape) and (max-height: 600px)",
-    ).matches;
-  document.body.classList.toggle(
-    "layout-landscape",
-    layoutPreference === "landscape" || autoLandscape,
-  );
-  document.body.classList.toggle(
-    "layout-portrait",
-    layoutPreference === "portrait",
-  );
+  const landscape = isLandscapeLayout();
+  document.body.classList.toggle("orientation-rotated", landscape);
 }
 
 function updateOrientationButton() {
@@ -411,58 +396,9 @@ function applyLayoutPreference(preference) {
   window.requestAnimationFrame(updateControls);
 }
 
-async function tryLockOrientation(preference) {
-  if (!screen.orientation?.lock) {
-    return;
-  }
-
-  let enteredFullscreen = false;
-  try {
-    if (
-      !document.fullscreenElement &&
-      document.documentElement.requestFullscreen
-    ) {
-      await document.documentElement.requestFullscreen();
-      orientationFullscreen = true;
-      enteredFullscreen = true;
-    }
-    await screen.orientation.lock(preference);
-  } catch {
-    // Some mobile browsers do not expose orientation locking. The layout
-    // preference still provides a useful, complete game view.
-    if (
-      enteredFullscreen &&
-      document.fullscreenElement &&
-      document.exitFullscreen
-    ) {
-      try {
-        await document.exitFullscreen();
-      } catch {
-        // The browser may already be leaving fullscreen after lock failure.
-      }
-      orientationFullscreen = false;
-    }
-  }
-}
-
-async function toggleOrientationLayout() {
+function toggleOrientationLayout() {
   const preference = isLandscapeLayout() ? "portrait" : "landscape";
   applyLayoutPreference(preference);
-  await tryLockOrientation(preference);
-
-  if (
-    preference === "portrait" &&
-    orientationFullscreen &&
-    document.fullscreenElement &&
-    document.exitFullscreen
-  ) {
-    try {
-      await document.exitFullscreen();
-    } catch {
-      // Keep the portrait layout even if the browser owns fullscreen state.
-    }
-    orientationFullscreen = false;
-  }
 }
 
 function clampNumber(value, minimum, maximum, fallback) {
@@ -539,8 +475,10 @@ resetGame();
 syncLayoutClasses();
 updateOrientationButton();
 
-window.addEventListener("resize", () => {
+function handleViewportChange() {
   syncLayoutClasses();
   updateOrientationButton();
-  updateControls();
-});
+  window.requestAnimationFrame(updateControls);
+}
+
+window.addEventListener("resize", handleViewportChange);

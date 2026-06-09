@@ -1017,180 +1017,26 @@ h2 {
   }
 }
 
-body.layout-landscape {
-  min-height: 100dvh;
-}
-
-body.layout-landscape .page-shell {
-  width: calc(100% - 10px);
-  padding: 5px 0;
-}
-
-body.layout-landscape .hero,
-body.layout-landscape .footer-note,
-body.layout-landscape .site-credit {
-  display: none;
-}
-
-body.layout-landscape .game-card {
-  min-height: calc(100dvh - 10px);
-  padding: 7px;
-  border-radius: 12px;
-}
-
-body.layout-landscape .game-toolbar {
-  min-height: 34px;
-}
-
-body.layout-landscape .section-kicker {
-  display: none;
-}
-
-body.layout-landscape h2 {
-  font-size: 0.9rem;
-}
-
-body.layout-landscape .orientation-button {
-  min-height: 32px;
-  padding: 5px 10px;
-}
-
-body.layout-landscape .settings-panel {
-  display: flex;
-  flex-wrap: nowrap;
-  gap: 5px;
-  margin-top: 5px;
-  padding: 4px;
-  overflow-x: auto;
-  scrollbar-width: thin;
-}
-
-body.layout-landscape .game-actions {
-  width: auto;
-}
-
-body.layout-landscape .game-actions button {
-  flex: 0 0 auto;
-  min-height: 30px;
-  padding: 5px 9px;
-}
-
-body.layout-landscape .custom-label {
-  width: auto;
-  padding: 0 2px;
-}
-
-body.layout-landscape .setting-group {
-  width: auto;
-  min-height: 34px;
-  padding: 3px 5px;
-}
-
-body.layout-landscape .number-stepper {
-  grid-template-columns: 27px 31px 27px;
-}
-
-body.layout-landscape .number-stepper button,
-body.layout-landscape .number-stepper input {
-  height: 28px;
-}
-
-body.layout-landscape .number-stepper input {
-  width: 31px;
-}
-
-body.layout-landscape .target-setting {
-  margin-left: 0;
-}
-
-body.layout-landscape .status-grid {
-  flex-wrap: nowrap;
-  margin-top: 4px;
-}
-
-body.layout-landscape .status-item {
-  flex-basis: 0;
-  min-height: 27px;
-  padding: 3px 6px;
-  border-right: 1px solid #e3ebed;
-  border-bottom: 0;
-}
-
-body.layout-landscape .status-item:last-child {
-  border-right: 0;
-}
-
-body.layout-landscape .progress-track {
-  margin-top: 3px;
-}
-
-body.layout-landscape .board-viewport {
-  margin-top: 3px;
-}
-
-body.layout-landscape .board-stage {
-  padding-top: 74px;
-}
-
-body.layout-landscape .controls-layer {
-  height: 72px;
-}
-
-body.layout-landscape .move-controls {
-  --stem-height: 39px;
-  width: 76px;
-  gap: 5px;
-}
-
-body.layout-landscape .move-controls::after {
-  top: 34px;
-}
-
-body.layout-landscape .move-controls.staggered {
-  --control-top: 35px;
-  --stem-height: 5px;
-}
-
-body.layout-landscape .arrow-button {
-  width: 32px;
-  height: 32px;
-  border-radius: 9px;
-  font-size: 1rem;
-}
-
-body.layout-landscape .legend {
-  min-height: 20px;
-  flex-wrap: nowrap;
-  font-size: 0.68rem;
-}
-
-body.layout-landscape .legend .hint {
-  width: auto;
-  margin-left: auto;
+body.orientation-rotated {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
   overflow: hidden;
-  text-align: right;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
-body.layout-landscape .message-panel {
-  margin-top: 5px;
-  padding: 6px 8px;
-}
-
-body.layout-landscape .history {
-  flex-wrap: nowrap;
-  margin-top: 5px;
-  padding-bottom: 1px;
-  overflow-x: auto;
-}
-
-body.layout-landscape .history li {
-  flex: 0 0 auto;
-}
-
-body.layout-portrait .page-shell {
-  width: min(600px, calc(100% - 12px));
+body.orientation-rotated .page-shell {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vh;
+  width: 100dvh;
+  max-width: none;
+  height: 100vw;
+  margin: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  transform-origin: 0 0;
+  transform: translateX(100vw) rotate(90deg);
 }
 
 @media (prefers-reduced-motion: reduce) {
