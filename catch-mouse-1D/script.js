@@ -28,9 +28,15 @@ const introTomPattern = document.querySelector("#introTomPattern");
 const introJerryPattern = document.querySelector("#introJerryPattern");
 const tomRule = document.querySelector("#tomRule");
 const jerryRule = document.querySelector("#jerryRule");
+const orientationButton = document.querySelector("#orientationButton");
+const orientationButtonText = document.querySelector(
+  "#orientationButtonText",
+);
 
 let state;
 let noticeTimer;
+let layoutPreference = null;
+let orientationFullscreen = false;
 let settings = {
   cellCount: 30,
   tomPattern: [3, 1],
@@ -365,6 +371,100 @@ function render() {
   renderHistory();
 }
 
+function isLandscapeLayout() {
+  if (layoutPreference) {
+    return layoutPreference === "landscape";
+  }
+  return window.matchMedia("(orientation: landscape)").matches;
+}
+
+function syncLayoutClasses() {
+  const autoLandscape =
+    !layoutPreference &&
+    window.matchMedia(
+      "(orientation: landscape) and (max-height: 600px)",
+    ).matches;
+  document.body.classList.toggle(
+    "layout-landscape",
+    layoutPreference === "landscape" || autoLandscape,
+  );
+  document.body.classList.toggle(
+    "layout-portrait",
+    layoutPreference === "portrait",
+  );
+}
+
+function updateOrientationButton() {
+  const landscape = isLandscapeLayout();
+  orientationButton.setAttribute("aria-pressed", String(landscape));
+  orientationButton.setAttribute(
+    "aria-label",
+    landscape ? "切换为竖屏布局" : "切换为横屏布局",
+  );
+  orientationButtonText.textContent = landscape ? "竖屏布局" : "横屏布局";
+}
+
+function applyLayoutPreference(preference) {
+  layoutPreference = preference;
+  syncLayoutClasses();
+  updateOrientationButton();
+  window.requestAnimationFrame(updateControls);
+}
+
+async function tryLockOrientation(preference) {
+  if (!screen.orientation?.lock) {
+    return;
+  }
+
+  let enteredFullscreen = false;
+  try {
+    if (
+      !document.fullscreenElement &&
+      document.documentElement.requestFullscreen
+    ) {
+      await document.documentElement.requestFullscreen();
+      orientationFullscreen = true;
+      enteredFullscreen = true;
+    }
+    await screen.orientation.lock(preference);
+  } catch {
+    // Some mobile browsers do not expose orientation locking. The layout
+    // preference still provides a useful, complete game view.
+    if (
+      enteredFullscreen &&
+      document.fullscreenElement &&
+      document.exitFullscreen
+    ) {
+      try {
+        await document.exitFullscreen();
+      } catch {
+        // The browser may already be leaving fullscreen after lock failure.
+      }
+      orientationFullscreen = false;
+    }
+  }
+}
+
+async function toggleOrientationLayout() {
+  const preference = isLandscapeLayout() ? "portrait" : "landscape";
+  applyLayoutPreference(preference);
+  await tryLockOrientation(preference);
+
+  if (
+    preference === "portrait" &&
+    orientationFullscreen &&
+    document.fullscreenElement &&
+    document.exitFullscreen
+  ) {
+    try {
+      await document.exitFullscreen();
+    } catch {
+      // Keep the portrait layout even if the browser owns fullscreen state.
+    }
+    orientationFullscreen = false;
+  }
+}
+
 function clampNumber(value, minimum, maximum, fallback) {
   const parsed = Number.parseInt(value, 10);
   if (Number.isNaN(parsed)) {
@@ -433,7 +533,14 @@ showTargetsInput.addEventListener("change", () => {
   settings.showTargets = showTargetsInput.checked;
   renderReachableCells();
 });
+orientationButton.addEventListener("click", toggleOrientationLayout);
 
 resetGame();
+syncLayoutClasses();
+updateOrientationButton();
 
-window.addEventListener("resize", updateControls);
+window.addEventListener("resize", () => {
+  syncLayoutClasses();
+  updateOrientationButton();
+  updateControls();
+});
