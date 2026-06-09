@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="选择不同棋盘，逐步探索骑士巡游与骑士回路"
+    />
+    <title>骑士巡游问题</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="hero">
+        <h1>骑士巡游问题</h1>
+      </header>
+
+      <section class="control-card" aria-label="探索设置">
+        <div class="primary-controls">
+          <label for="boardType">棋盘类型</label>
+          <select id="boardType">
+            <option value="3x4">3 × 4</option>
+            <option value="5x5">5 × 5</option>
+            <option value="8x8">8 × 8</option>
+            <option value="cross">十字形</option>
+          </select>
+          <button id="resetButton" class="primary-button" type="button">
+            重新开始
+          </button>
+          <button id="undoButton" class="secondary-button" type="button" disabled>
+            撤回一步
+          </button>
+        </div>
+
+        <div class="display-options">
+          <label>
+            <input id="showMoves" type="checkbox" checked />
+            <span>显示可走方格</span>
+          </label>
+          <label>
+            <input id="showDegrees" type="checkbox" />
+            <span>显示下一步出口数</span>
+          </label>
+          <label>
+            <input id="showOrder" type="checkbox" checked />
+            <span>记录行动序号</span>
+          </label>
+          <label>
+            <input id="showPath" type="checkbox" checked />
+            <span>显示移动路线</span>
+          </label>
+        </div>
+
+        <div class="progress-row">
+          <p id="phaseText" class="phase-text">请选择起始位置</p>
+          <p class="progress-text">
+            已走 <strong id="visitedCount">0</strong> /
+            <strong id="totalCount">12</strong> 格
+          </p>
+        </div>
+      </section>
+
+      <p id="statusMessage" class="status-message" role="status" aria-live="polite">
+        请点击一个格子选择起始位置
+      </p>
+
+      <section class="board-section" aria-label="骑士巡游棋盘">
+        <div class="board-card">
+          <div id="board" class="board" role="grid"></div>
+          <svg id="pathLayer" class="path-layer" aria-hidden="true"></svg>
+        </div>
+        <p id="boardSizeNote" class="board-note"></p>
+      </section>
+
+      <section class="guide-card" aria-labelledby="guide-title">
+        <h2 id="guide-title">游戏说明</h2>
+        <ul class="guide-list">
+          <li>点击格子选择起始位置，骑士按 L 形移动</li>
+          <li>目标：访问每个格子恰好一次</li>
+          <li>
+            <i class="sample available"></i>
+            绿色格子能走，<i class="degree-sample">3</i>
+            代表出口数（可选路径数）
+          </li>
+          <li>
+            <i class="sample visited"></i>
+            蓝色格子已走过，大数字显示步数序号
+          </li>
+          <li><i class="line-sample"></i>橙色线段显示移动路径</li>
+        </ul>
+      </section>
+
+      <footer>@孙维刚教育研究院 小宇老师</footer>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
